@@ -1,4 +1,5 @@
 import React from "react";
+
 import { GraphQLClient }  from 'graphql-request';
 import { GoogleLogin } from 'react-google-login';
 
@@ -19,15 +20,30 @@ const ME_QUERY = `
 const Login = ({ classes }) => {
 
   const onSuccess = async googleUser => {
-    const idToken = googleUser.getAuthResponse().id_Token;
+    console.log("googleUser:", googleUser);
 
-    const client = new GraphQLClient('http://localhost/4000/graphql', {
+    // Reed's code, but Google APIs changed the structure of its returned user
+    //const idToken = googleUser.getAuthResponse().id_Token;
+    const idToken = googleUser.tokenId;
+
+    if (!idToken) {
+      console.log("idToken is null");
+    }
+    console.log("idToken:", idToken);
+
+    const endpoint = 'http://localhost:4000/graphql';
+    const client = new GraphQLClient(endpoint, {
+      mode: 'cors',
       headers: { authorization: idToken }
     });
+    console.log("client:", client);
 
     try {
-      await client.request(ME_QUERY);
-    } catch (err) {
+      const data = await client.request(ME_QUERY);
+      console.log({ data });
+      //console.log(JSON.stringify(data, undefined, 2));
+    }
+    catch (err) {
       console.error(`(ln-31, Login.js) ${err}`);
     }
   };
