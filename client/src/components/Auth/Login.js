@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 const ME_QUERY = `
 {
   me {
-  	_id
+    _id
     name
     email
     picture
@@ -22,8 +22,9 @@ const Login = ({ classes }) => {
   const onSuccess = async googleUser => {
     console.log("googleUser:", googleUser);
 
-    // Reed's code, but Google APIs changed the structure of its returned user
+    // Google APIs changed the structure of its returned user
     //const idToken = googleUser.getAuthResponse().id_Token;
+    //
     const idToken = googleUser.tokenId;
 
     if (!idToken) {
